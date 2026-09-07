@@ -41,6 +41,7 @@
 
       --text-main: #0f2744;
       --text-muted: #2563eb;
+      --text-sub: #64748b;
 
       --accent-indigo: #2563eb;
       --accent-indigo-hover: #1d4ed8;
@@ -76,6 +77,50 @@
       --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
     }
 
+    [data-theme="dark"] {
+      --sidebar-bg: #0b1120;
+      --sidebar-hover: #1e293b;
+      --sidebar-active: #1d4ed8;
+      --sidebar-text: #f1f5f9;
+      --sidebar-border: #1e293b;
+
+      --bg-main: #060b14;
+      --bg-card: #0f172a;
+      --border-color: #1e293b;
+      --border-dark: #334155;
+
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-sub: #94a3b8;
+
+      --accent-indigo: #3b82f6;
+      --accent-indigo-hover: #2563eb;
+      --accent-indigo-light: #1e293b;
+      --accent-blue: #60a5fa;
+
+      --priority-high-bg: #450a0a;
+      --priority-high-text: #fca5a5;
+      --priority-high-border: #7f1d1d;
+
+      --priority-med-bg: #451a03;
+      --priority-med-text: #fcd34d;
+      --priority-med-border: #78350f;
+
+      --priority-low-bg: #022c22;
+      --priority-low-text: #6ee7b7;
+      --priority-low-border: #065f46;
+
+      --tag-work-bg: #0c4a6e;
+      --tag-work-text: #7dd3fc;
+      --tag-personal-bg: #701a75;
+      --tag-personal-text: #f472b6;
+      --tag-urgent-bg: #881337;
+      --tag-urgent-text: #fda4af;
+
+      --star-color: #fde047;
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
+    }
+
     body {
       font-family: var(--font-stack);
       background-color: var(--bg-main);
@@ -83,6 +128,7 @@
       line-height: 1.4;
       font-size: 14px;
       -webkit-font-smoothing: antialiased;
+      transition: background-color 0.25s ease, color 0.25s ease;
     }
 
     button,
@@ -125,6 +171,7 @@
       top: 0;
       overflow-y: auto;
       z-index: 100;
+      transition: background-color 0.25s ease, border-color 0.25s ease;
     }
 
     .brand-section {
@@ -156,21 +203,44 @@
     .brand-title {
       font-size: 17px;
       font-weight: 700;
-      color: #0f2744;
+      color: var(--text-main);
       letter-spacing: -0.02em;
+    }
+
+    .theme-toggle-btn {
+      width: 36px;
+      height: 36px;
+      min-width: 36px;
+      min-height: 36px;
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--sidebar-hover);
+      color: var(--text-main);
+      font-size: 16px;
+      border: 1px solid var(--sidebar-border);
+      transition: background-color 0.2s ease;
+    }
+
+    .theme-toggle-btn:hover {
+      background: var(--sidebar-active);
     }
 
     .close-sidebar-btn {
       display: none;
       font-size: 18px;
-      color: #0f2744;
+      color: var(--text-main);
       padding: 4px;
+      min-width: 36px;
+      min-height: 36px;
     }
 
     .btn-create-task {
       background: linear-gradient(135deg, var(--accent-indigo), var(--accent-indigo-hover));
       color: #ffffff;
-      padding: 9px 14px;
+      padding: 10px 14px;
+      min-height: 44px;
       border-radius: var(--radius-md);
       font-weight: 600;
       display: flex;
@@ -187,7 +257,7 @@
 
     .progress-widget {
       background: var(--accent-indigo-light);
-      border: 1px solid #bfdbfe;
+      border: 1px solid var(--border-color);
       border-radius: var(--radius-md);
       padding: 10px;
       display: flex;
@@ -200,12 +270,12 @@
       justify-content: space-between;
       font-size: 11px;
       font-weight: 700;
-      color: #0f2744;
+      color: var(--text-main);
     }
 
     .progress-bar-bg {
       height: 6px;
-      background: #cbd5e1;
+      background: var(--border-color);
       border-radius: 4px;
       overflow: hidden;
     }
@@ -226,7 +296,7 @@
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.08em;
-      color: #1e3a8a;
+      color: var(--text-muted);
       margin-bottom: 6px;
       padding-left: 8px;
     }
@@ -241,9 +311,10 @@
     .menu-item button {
       width: 100%;
       text-align: left;
-      padding: 8px 10px;
+      padding: 10px 10px;
+      min-height: 42px;
       border-radius: var(--radius-md);
-      color: #1e3a8a;
+      color: var(--sidebar-text);
       font-weight: 600;
       display: flex;
       align-items: center;
@@ -253,12 +324,12 @@
 
     .menu-item button:hover {
       background-color: var(--sidebar-hover);
-      color: #0f2744;
+      color: var(--text-main);
     }
 
     .menu-item.active button {
       background-color: var(--sidebar-active);
-      color: #0f172a;
+      color: #ffffff;
       font-weight: 700;
     }
 
@@ -270,15 +341,15 @@
 
     .badge-count {
       font-size: 11px;
-      background: #eff6ff;
-      color: #1e3a8a;
+      background: var(--accent-indigo-light);
+      color: var(--text-main);
       padding: 2px 7px;
       border-radius: 12px;
       font-weight: 600;
     }
 
     .menu-item.active .badge-count {
-      background: var(--accent-indigo);
+      background: rgba(255, 255, 255, 0.25);
       color: #ffffff;
     }
 
@@ -326,11 +397,12 @@
       display: flex;
       align-items: center;
       gap: 6px;
-      padding: 6px 12px;
+      padding: 8px 12px;
+      min-height: 40px;
       background: var(--sidebar-hover);
       border: 1px solid var(--border-color);
       border-radius: var(--radius-md);
-      color: #0f2744;
+      color: var(--text-main);
       font-weight: 600;
       font-size: 13px;
     }
@@ -355,7 +427,7 @@
         z-index: 1000;
         transform: translateX(-100%);
         transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
-        box-shadow: 6px 0 20px rgba(15, 23, 42, 0.15);
+        box-shadow: 6px 0 20px rgba(0, 0, 0, 0.3);
         will-change: transform;
       }
 
@@ -364,14 +436,16 @@
       }
 
       .close-sidebar-btn {
-        display: block;
+        display: flex;
+        align-items: center;
+        justify-content: center;
       }
 
       .sidebar-overlay {
         display: block;
         position: fixed;
         inset: 0;
-        background: rgba(15, 23, 42, 0.45);
+        background: rgba(0, 0, 0, 0.6);
         backdrop-filter: blur(3px);
         z-index: 999;
         opacity: 0;
@@ -407,7 +481,7 @@
     .page-title {
       font-size: 20px;
       font-weight: 700;
-      color: #0f2744;
+      color: var(--text-main);
       letter-spacing: -0.01em;
     }
 
@@ -427,12 +501,13 @@
 
     .search-input {
       width: 100%;
-      padding: 8px 12px 8px 34px;
+      padding: 10px 12px 10px 34px;
+      min-height: 42px;
       border: 1px solid var(--border-color);
       border-radius: var(--radius-md);
       background: var(--bg-card);
       box-shadow: var(--shadow-sm);
-      color: #0f2744;
+      color: var(--text-main);
       font-size: 13px;
     }
 
@@ -441,28 +516,30 @@
       left: 10px;
       top: 50%;
       transform: translateY(-50%);
-      color: #1e3a8a;
+      color: var(--text-muted);
       pointer-events: none;
       font-size: 13px;
     }
 
     .select-control {
-      padding: 8px 10px;
+      padding: 10px 10px;
+      min-height: 42px;
       border: 1px solid var(--border-color);
       border-radius: var(--radius-md);
       background: var(--bg-card);
       box-shadow: var(--shadow-sm);
-      color: #0f2744;
+      color: var(--text-main);
       font-weight: 600;
       font-size: 13px;
     }
 
     .btn-secondary-action {
-      padding: 6px 10px;
+      padding: 8px 12px;
+      min-height: 40px;
       border: 1px solid var(--border-color);
       border-radius: var(--radius-md);
       background: var(--bg-card);
-      color: #1e3a8a;
+      color: var(--text-main);
       font-weight: 600;
       font-size: 12px;
       box-shadow: var(--shadow-sm);
@@ -478,45 +555,51 @@
       background: var(--bg-card);
       border: 1px solid var(--border-color);
       border-radius: var(--radius-md);
-      padding: 10px 12px;
+      padding: 12px;
       display: flex;
       flex-direction: column;
       gap: 8px;
       box-shadow: var(--shadow-sm);
-      transition: border-color 0.15s ease;
+      transition: border-color 0.15s ease, background-color 0.25s ease;
     }
 
     .task-card.completed {
-      background-color: #f8fafc;
-      opacity: 0.75;
+      opacity: 0.7;
     }
 
     .task-card.completed .task-title {
       text-decoration: line-through;
-      color: #64748b;
+      color: var(--text-sub);
     }
 
     .task-top-row {
       display: flex;
       align-items: flex-start;
-      gap: 8px;
+      gap: 10px;
       width: 100%;
     }
 
     .task-checkbox {
       margin-top: 2px;
-      width: 18px;
-      height: 18px;
+      width: 20px;
+      height: 20px;
+      min-width: 20px;
+      min-height: 20px;
       cursor: pointer;
       accent-color: var(--accent-indigo);
       flex-shrink: 0;
     }
 
     .star-btn {
-      color: #cbd5e1;
-      font-size: 18px;
+      color: var(--border-dark);
+      font-size: 20px;
       line-height: 1;
-      padding-top: 1px;
+      padding: 2px;
+      min-width: 28px;
+      min-height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       flex-shrink: 0;
     }
 
@@ -542,7 +625,7 @@
     .task-title {
       font-weight: 600;
       font-size: 14px;
-      color: #0f2744;
+      color: var(--text-main);
       line-height: 1.3;
       word-break: break-word;
     }
@@ -555,7 +638,7 @@
     }
 
     .task-desc {
-      color: #2563eb;
+      color: var(--text-muted);
       font-size: 12px;
       line-height: 1.35;
       word-break: break-word;
@@ -614,11 +697,11 @@
 
     .subtasks-section {
       margin-top: 4px;
-      padding-top: 4px;
+      padding-top: 6px;
       border-top: 1px dashed var(--border-color);
       display: flex;
       flex-direction: column;
-      gap: 4px;
+      gap: 6px;
     }
 
     .subtask-item {
@@ -626,14 +709,14 @@
       align-items: flex-start;
       gap: 8px;
       font-size: 12px;
-      color: #0f2744;
+      color: var(--text-main);
     }
 
     .subtask-item input[type="checkbox"] {
       margin-top: 2px;
       flex-shrink: 0;
-      width: 14px;
-      height: 14px;
+      width: 16px;
+      height: 16px;
     }
 
     .subtask-item span {
@@ -644,7 +727,7 @@
 
     .subtask-item.completed span {
       text-decoration: line-through;
-      color: #64748b;
+      color: var(--text-sub);
     }
 
     .task-bottom-row {
@@ -652,7 +735,7 @@
       align-items: center;
       justify-content: space-between;
       padding-top: 6px;
-      border-top: 1px solid #f1f5f9;
+      border-top: 1px solid var(--border-color);
       gap: 8px;
     }
 
@@ -661,7 +744,7 @@
       align-items: center;
       gap: 8px;
       font-size: 11px;
-      color: #1e3a8a;
+      color: var(--text-muted);
     }
 
     .task-actions {
@@ -672,12 +755,14 @@
     }
 
     .icon-btn {
-      padding: 3px 8px;
-      color: #1e3a8a;
+      padding: 6px 10px;
+      min-height: 32px;
+      color: var(--text-main);
       border-radius: var(--radius-sm);
       font-size: 11px;
       font-weight: 600;
       background: var(--bg-main);
+      border: 1px solid var(--border-color);
     }
 
     .confirm-box {
@@ -685,23 +770,23 @@
       align-items: center;
       gap: 4px;
       font-size: 11px;
-      background: #fef2f2;
+      background: var(--priority-high-bg);
       padding: 2px 6px;
       border-radius: var(--radius-sm);
-      border: 1px solid #fecaca;
+      border: 1px solid var(--priority-high-border);
     }
 
     .confirm-box span {
-      color: var(--danger-color);
+      color: var(--priority-high-text);
       font-weight: 600;
     }
 
     .btn-danger-sm {
       background-color: var(--danger-color);
       color: #ffffff;
-      padding: 2px 6px;
+      padding: 4px 8px;
       border-radius: var(--radius-sm);
-      font-weight: 500;
+      font-weight: 600;
       font-size: 10px;
     }
 
@@ -712,7 +797,7 @@
       padding: 14px;
       box-shadow: var(--shadow-sm);
       height: fit-content;
-      color: #0f2744;
+      color: var(--text-main);
     }
 
     .calendar-header {
@@ -725,7 +810,7 @@
     .calendar-header h3 {
       font-size: 14px;
       font-weight: 700;
-      color: #0f2744;
+      color: var(--text-main);
     }
 
     .calendar-nav {
@@ -734,12 +819,15 @@
     }
 
     .calendar-nav button {
-      padding: 2px 8px;
+      padding: 4px 10px;
+      min-width: 32px;
+      min-height: 32px;
       border: 1px solid var(--border-color);
       border-radius: var(--radius-sm);
-      font-size: 11px;
+      font-size: 12px;
       font-weight: 600;
-      color: #1e3a8a;
+      color: var(--text-main);
+      background: var(--bg-main);
     }
 
     .calendar-grid {
@@ -752,7 +840,7 @@
     .calendar-day-head {
       font-size: 10px;
       font-weight: 700;
-      color: #1e3a8a;
+      color: var(--text-muted);
       padding: 4px 0;
     }
 
@@ -767,13 +855,13 @@
       cursor: pointer;
       position: relative;
       font-weight: 600;
-      color: #0f2744;
+      color: var(--text-main);
     }
 
     .calendar-cell.today {
       font-weight: 700;
       color: var(--accent-indigo);
-      background-color: #f1f5f9;
+      background-color: var(--accent-indigo-light);
     }
 
     .calendar-cell.selected {
@@ -800,8 +888,8 @@
       left: 0;
       right: 0;
       bottom: 0;
-      background: rgba(15, 23, 42, 0.5);
-      backdrop-filter: blur(2px);
+      background: rgba(0, 0, 0, 0.65);
+      backdrop-filter: blur(3px);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -812,14 +900,15 @@
     .modal-card {
       background: var(--bg-card);
       border-radius: var(--radius-lg);
+      border: 1px solid var(--border-color);
       width: 100%;
       max-width: 480px;
       padding: 18px;
-      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
       display: flex;
       flex-direction: column;
       gap: 14px;
-      color: #0f2744;
+      color: var(--text-main);
       max-height: 90vh;
       overflow-y: auto;
     }
@@ -833,7 +922,7 @@
     .modal-header h2 {
       font-size: 16px;
       font-weight: 700;
-      color: #0f2744;
+      color: var(--text-main);
     }
 
     .form-group {
@@ -845,18 +934,19 @@
     .form-group label {
       font-size: 11px;
       font-weight: 700;
-      color: #1e3a8a;
+      color: var(--text-muted);
       text-transform: uppercase;
     }
 
     .form-group input,
     .form-group textarea,
     .form-group select {
-      padding: 8px 10px;
+      padding: 10px 10px;
+      min-height: 42px;
       border: 1px solid var(--border-color);
       border-radius: var(--radius-md);
-      background: var(--bg-card);
-      color: #0f2744;
+      background: var(--bg-main);
+      color: var(--text-main);
       font-size: 13px;
     }
 
@@ -883,9 +973,10 @@
       align-items: center;
       justify-content: space-between;
       background: var(--bg-main);
-      padding: 4px 8px;
+      padding: 6px 10px;
       border-radius: var(--radius-sm);
       font-size: 12px;
+      border: 1px solid var(--border-color);
     }
 
     .form-actions {
@@ -898,17 +989,19 @@
     .btn-secondary {
       background: var(--bg-main);
       border: 1px solid var(--border-color);
-      padding: 7px 14px;
+      padding: 8px 14px;
+      min-height: 40px;
       border-radius: var(--radius-md);
       font-weight: 600;
-      color: #0f2744;
+      color: var(--text-main);
       font-size: 13px;
     }
 
     .btn-primary {
       background: var(--accent-indigo);
       color: #ffffff;
-      padding: 7px 14px;
+      padding: 8px 14px;
+      min-height: 40px;
       border-radius: var(--radius-md);
       font-weight: 600;
       font-size: 13px;
@@ -917,7 +1010,7 @@
     .empty-state {
       text-align: center;
       padding: 32px 12px;
-      color: #1e3a8a;
+      color: var(--text-muted);
       background: var(--bg-card);
       border: 2px dashed var(--border-color);
       border-radius: var(--radius-lg);
@@ -928,34 +1021,11 @@
       align-items: center;
       justify-content: space-between;
       background: var(--accent-indigo-light);
-      border: 1px solid #bfdbfe;
-      color: #0f2744;
-      padding: 6px 12px;
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 8px 12px;
       border-radius: var(--radius-md);
       font-size: 12px;
-    }
-
-    .install-app-btn {
-      padding: 7px 10px;
-      background: var(--accent-indigo);
-      color: #ffffff;
-      border-radius: var(--radius-md);
-      font-size: 12px;
-      font-weight: 700;
-      box-shadow: var(--shadow-sm);
-    }
-
-    .install-app-btn:active {
-      transform: scale(0.98);
-    }
-
-    @media (min-width: 769px) {
-      #install-app-btn {
-        position: fixed;
-        top: 12px;
-        right: 14px;
-        z-index: 1100;
-      }
     }
   </style>
 </head>
@@ -1025,6 +1095,12 @@
     ];
 
     function App() {
+      const [theme, setTheme] = useState(() => {
+        const savedTheme = localStorage.getItem('tf_theme');
+        if (savedTheme) return savedTheme;
+        return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      });
+
       const [tasks, setTasks] = useState(() => {
         const saved = localStorage.getItem('tf_tasks');
         return saved ? JSON.parse(saved) : INITIAL_TASKS;
@@ -1055,6 +1131,11 @@
       const [deleteConfirmId, setDeleteConfirmId] = useState(null);
 
       const todayStr = useMemo(() => new Date().toISOString().split('T')[0], []);
+
+      useEffect(() => {
+        document.documentElement.setAttribute('data-theme', theme);
+        localStorage.setItem('tf_theme', theme);
+      }, [theme]);
 
       useEffect(() => {
         localStorage.setItem('tf_tasks', JSON.stringify(tasks));
@@ -1097,6 +1178,10 @@
           document.body.style.touchAction = '';
         };
       }, [isMobileSidebarOpen]);
+
+      const toggleTheme = () => {
+        setTheme(prev => prev === 'light' ? 'dark' : 'light');
+      };
 
       const resetForm = () => {
         setFormTitle('');
@@ -1227,7 +1312,7 @@
           if (searchQuery.trim()) {
             const query = searchQuery.toLowerCase();
             const matchesTitle = task.title.toLowerCase().includes(query);
-            const matchesDesc = task.description.toLowerCase().includes(query);
+            const matchesDesc = task.description ? task.description.toLowerCase().includes(query) : false;
             if (!matchesTitle && !matchesDesc) return false;
           }
 
@@ -1286,17 +1371,26 @@
         }
         for (let d = 1; d <= daysInMonth; d++) {
           const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
-          const hasTasks = tasks.some(t => !t.archived && t.dueDate === dateStr);
-          grid.push({ day: d, dateStr, hasTasks });
+          grid.push({ day: d, dateStr });
         }
         return grid;
-      }, [calendarDate, tasks]);
+      }, [calendarDate]);
 
-      const changeMonth = (delta) => {
-        setCalendarDate(new Date(calendarDate.getFullYear(), calendarDate.getMonth() + delta, 1));
+      const datesWithTasks = useMemo(() => {
+        const set = new Set();
+        tasks.filter(t => !t.archived).forEach(t => {
+          if (t.dueDate) set.add(t.dueDate);
+        });
+        return set;
+      }, [tasks]);
+
+      const prevMonth = () => {
+        setCalendarDate(new Date(calendarDate.getFullYear(), calendarDate.getMonth() - 1, 1));
       };
 
-      const monthLabel = calendarDate.toLocaleString('default', { month: 'long', year: 'numeric' });
+      const nextMonth = () => {
+        setCalendarDate(new Date(calendarDate.getFullYear(), calendarDate.getMonth() + 1, 1));
+      };
 
       return (
         <div className="app-layout">
@@ -1311,22 +1405,26 @@
                 <div className="brand-icon">✓</div>
                 <span className="brand-title">Task Flow</span>
               </div>
-              <button
-                className="close-sidebar-btn"
-                onClick={() => setIsMobileSidebarOpen(false)}
-              >
-                ✕
-              </button>
+              <div style={{ display: 'flex', gap: '4px', alignItems: 'center' }}>
+                <button
+                  className="theme-toggle-btn"
+                  onClick={toggleTheme}
+                  aria-label="Toggle dark mode"
+                  title="Toggle Theme"
+                >
+                  {theme === 'light' ? '🌙' : '☀️'}
+                </button>
+                <button className="close-sidebar-btn" onClick={() => setIsMobileSidebarOpen(false)}>✕</button>
+              </div>
             </div>
 
-            <button className="btn-create-task" onClick={() => { openNewTaskModal(); setIsMobileSidebarOpen(false); }}>
-              <span>+</span>
-              <span>New Task</span>
+            <button className="btn-create-task" onClick={openNewTaskModal}>
+              <span>+</span> New Task
             </button>
 
             <div className="progress-widget">
               <div className="progress-header">
-                <span>Total Progress</span>
+                <span>Task Completion</span>
                 <span>{completionPercent}%</span>
               </div>
               <div className="progress-bar-bg">
@@ -1339,71 +1437,26 @@
               <ul className="menu-list">
                 <li className={`menu-item ${currentView === 'all' && priorityFilter === 'all' && tagFilter === 'all' ? 'active' : ''}`}>
                   <button onClick={() => selectFilterView('all')}>
-                    <div className="menu-item-left">
-                      <span>📋</span>
-                      <span>All Tasks</span>
-                    </div>
+                    <div className="menu-item-left">📋 All Tasks</div>
                     <span className="badge-count">{counts.all}</span>
                   </button>
                 </li>
                 <li className={`menu-item ${currentView === 'today' ? 'active' : ''}`}>
                   <button onClick={() => selectFilterView('today')}>
-                    <div className="menu-item-left">
-                      <span>☀️</span>
-                      <span>Due Today</span>
-                    </div>
+                    <div className="menu-item-left">📅 Today</div>
                     <span className="badge-count">{counts.today}</span>
                   </button>
                 </li>
                 <li className={`menu-item ${currentView === 'starred' ? 'active' : ''}`}>
                   <button onClick={() => selectFilterView('starred')}>
-                    <div className="menu-item-left">
-                      <span>⭐</span>
-                      <span>Starred</span>
-                    </div>
+                    <div className="menu-item-left">⭐ Starred</div>
                     <span className="badge-count">{counts.starred}</span>
                   </button>
                 </li>
                 <li className={`menu-item ${currentView === 'archived' ? 'active' : ''}`}>
                   <button onClick={() => selectFilterView('archived')}>
-                    <div className="menu-item-left">
-                      <span>📦</span>
-                      <span>Archived</span>
-                    </div>
+                    <div className="menu-item-left">📦 Archived</div>
                     <span className="badge-count">{counts.archived}</span>
-                  </button>
-                </li>
-              </ul>
-            </div>
-
-            <div className="menu-group">
-              <div className="menu-label">Tags</div>
-              <ul className="menu-list">
-                <li className={`menu-item ${tagFilter === 'Work' ? 'active' : ''}`}>
-                  <button onClick={() => selectFilterView(currentView, priorityFilter, 'Work')}>
-                    <div className="menu-item-left">
-                      <span>🏷️</span>
-                      <span>Work</span>
-                    </div>
-                    <span className="badge-count">{counts.work}</span>
-                  </button>
-                </li>
-                <li className={`menu-item ${tagFilter === 'Personal' ? 'active' : ''}`}>
-                  <button onClick={() => selectFilterView(currentView, priorityFilter, 'Personal')}>
-                    <div className="menu-item-left">
-                      <span>🏠</span>
-                      <span>Personal</span>
-                    </div>
-                    <span className="badge-count">{counts.personal}</span>
-                  </button>
-                </li>
-                <li className={`menu-item ${tagFilter === 'Urgent' ? 'active' : ''}`}>
-                  <button onClick={() => selectFilterView(currentView, priorityFilter, 'Urgent')}>
-                    <div className="menu-item-left">
-                      <span>🔥</span>
-                      <span>Urgent</span>
-                    </div>
-                    <span className="badge-count">{counts.urgent}</span>
                   </button>
                 </li>
               </ul>
@@ -1413,252 +1466,276 @@
               <div className="menu-label">Priority</div>
               <ul className="menu-list">
                 <li className={`menu-item ${priorityFilter === 'High' ? 'active' : ''}`}>
-                  <button onClick={() => selectFilterView(currentView, 'High', tagFilter)}>
+                  <button onClick={() => selectFilterView('all', 'High', 'all')}>
                     <div className="menu-item-left">
-                      <span className="badge-dot high"></span>
-                      <span>High Priority</span>
+                      <span className="badge-dot high" /> High Priority
                     </div>
                     <span className="badge-count">{counts.high}</span>
                   </button>
                 </li>
                 <li className={`menu-item ${priorityFilter === 'Medium' ? 'active' : ''}`}>
-                  <button onClick={() => selectFilterView(currentView, 'Medium', tagFilter)}>
+                  <button onClick={() => selectFilterView('all', 'Medium', 'all')}>
                     <div className="menu-item-left">
-                      <span className="badge-dot medium"></span>
-                      <span>Medium Priority</span>
+                      <span className="badge-dot medium" /> Medium Priority
                     </div>
                     <span className="badge-count">{counts.medium}</span>
                   </button>
                 </li>
                 <li className={`menu-item ${priorityFilter === 'Low' ? 'active' : ''}`}>
-                  <button onClick={() => selectFilterView(currentView, 'Low', tagFilter)}>
+                  <button onClick={() => selectFilterView('all', 'Low', 'all')}>
                     <div className="menu-item-left">
-                      <span className="badge-dot low"></span>
-                      <span>Low Priority</span>
+                      <span className="badge-dot low" /> Low Priority
                     </div>
                     <span className="badge-count">{counts.low}</span>
                   </button>
                 </li>
               </ul>
             </div>
+
+            <div className="menu-group">
+              <div className="menu-label">Tags</div>
+              <ul className="menu-list">
+                <li className={`menu-item ${tagFilter === 'Work' ? 'active' : ''}`}>
+                  <button onClick={() => selectFilterView('all', 'all', 'Work')}>
+                    <div className="menu-item-left">💼 Work</div>
+                    <span className="badge-count">{counts.work}</span>
+                  </button>
+                </li>
+                <li className={`menu-item ${tagFilter === 'Personal' ? 'active' : ''}`}>
+                  <button onClick={() => selectFilterView('all', 'all', 'Personal')}>
+                    <div className="menu-item-left">👤 Personal</div>
+                    <span className="badge-count">{counts.personal}</span>
+                  </button>
+                </li>
+                <li className={`menu-item ${tagFilter === 'Urgent' ? 'active' : ''}`}>
+                  <button onClick={() => selectFilterView('all', 'all', 'Urgent')}>
+                    <div className="menu-item-left">🔥 Urgent</div>
+                    <span className="badge-count">{counts.urgent}</span>
+                  </button>
+                </li>
+              </ul>
+            </div>
           </aside>
 
-          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', width: '100%' }}>
+          <main className="main-wrapper">
             <div className="top-bar-mobile">
-              <button
-                className="menu-toggle-btn"
-                onClick={() => setIsMobileSidebarOpen(true)}
-              >
-                <span>☰</span>
-                <span>Menu</span>
+              <button className="menu-toggle-btn" onClick={() => setIsMobileSidebarOpen(true)}>
+                ☰ Menu
               </button>
               <div className="brand-content">
                 <div className="brand-icon">✓</div>
                 <span className="brand-title">Task Flow</span>
               </div>
-              <button id="install-app-btn" className="install-app-btn" style={{display: 'none'}}>
-                Install
+              <button
+                className="theme-toggle-btn"
+                onClick={toggleTheme}
+                aria-label="Toggle dark mode"
+              >
+                {theme === 'light' ? '🌙' : '☀️'}
               </button>
             </div>
 
-            <div className="main-wrapper">
-              <main className="content-area">
-                <div className="top-header">
-                  <h1 className="page-title">
-                    {currentView === 'all' && priorityFilter === 'all' && tagFilter === 'all' && 'All Tasks'}
-                    {currentView === 'today' && 'Due Today'}
-                    {currentView === 'starred' && 'Starred Tasks'}
-                    {currentView === 'archived' && 'Archived Tasks'}
-                    {tagFilter !== 'all' && `Tag: ${tagFilter}`}
-                    {priorityFilter !== 'all' && ` - ${priorityFilter} Priority`}
-                  </h1>
-                  {counts.completedCount > 0 && currentView !== 'archived' && (
-                    <button className="btn-secondary-action" onClick={handleClearCompleted}>
-                      Clear Completed
-                    </button>
-                  )}
-                </div>
-
-                <div className="toolbar">
-                  <div className="search-bar">
-                    <span className="search-icon">🔍</span>
-                    <input
-                      type="text"
-                      className="search-input"
-                      placeholder="Search tasks..."
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                    />
-                  </div>
-                  <select
-                    className="select-control"
-                    value={sortBy}
-                    onChange={(e) => setSortBy(e.target.value)}
-                  >
-                    <option value="dueDate">Sort by Due Date</option>
-                    <option value="priority">Sort by Priority</option>
-                    <option value="title">Sort by Title</option>
-                    <option value="createdAt">Sort by Date Added</option>
-                  </select>
-                </div>
-
-                {selectedDate && (
-                  <div className="filter-indicator">
-                    <span>Filtered by Date: <strong>{selectedDate}</strong></span>
-                    <button onClick={() => setSelectedDate(null)} style={{ border: 'none', background: 'none', cursor: 'pointer', color: 'inherit', fontWeight: 'bold' }}>✕ Clear</button>
-                  </div>
+            <section className="content-area">
+              <div className="top-header">
+                <h1 className="page-title">
+                  {currentView === 'today' && 'Today\'s Tasks'}
+                  {currentView === 'starred' && 'Starred Tasks'}
+                  {currentView === 'archived' && 'Archived Tasks'}
+                  {currentView === 'all' && priorityFilter === 'all' && tagFilter === 'all' && 'All Tasks'}
+                  {priorityFilter !== 'all' && `${priorityFilter} Priority Tasks`}
+                  {tagFilter !== 'all' && `${tagFilter} Tasks`}
+                </h1>
+                {counts.completedCount > 0 && currentView !== 'archived' && (
+                  <button className="btn-secondary-action" onClick={handleClearCompleted}>
+                    Clear Completed
+                  </button>
                 )}
+              </div>
 
-                <div className="task-list">
-                  {filteredTasks.length === 0 ? (
-                    <div className="empty-state">
-                      <p>No tasks match your selection.</p>
-                    </div>
-                  ) : (
-                    filteredTasks.map(task => (
-                      <div key={task.id} className={`task-card ${task.completed ? 'completed' : ''}`}>
-                        <div className="task-top-row">
-                          <input
-                            type="checkbox"
-                            className="task-checkbox"
-                            checked={task.completed}
-                            onChange={() => toggleComplete(task.id)}
-                          />
-                          <button
-                            className={`star-btn ${task.starred ? 'starred' : ''}`}
-                            onClick={() => toggleStar(task.id)}
-                          >
-                            ★
-                          </button>
-                          <div className="task-content">
-                            <div className="task-header-row">
-                              <span className="task-title">{task.title}</span>
-                              <div className="task-badges">
-                                <span className={`tag-badge tag-${task.tag}`}>{task.tag}</span>
-                                <span className={`priority-tag priority-${task.priority}`}>{task.priority}</span>
-                              </div>
-                            </div>
-
-                            {task.description && <p className="task-desc">{task.description}</p>}
-
-                            {task.subtasks && task.subtasks.length > 0 && (
-                              <div className="subtasks-section">
-                                {task.subtasks.map(sub => (
-                                  <div key={sub.id} className={`subtask-item ${sub.completed ? 'completed' : ''}`}>
-                                    <input
-                                      type="checkbox"
-                                      checked={sub.completed}
-                                      onChange={() => toggleSubtask(task.id, sub.id)}
-                                    />
-                                    <span>{sub.text}</span>
-                                  </div>
-                                ))}
-                              </div>
-                            )}
-                          </div>
-                        </div>
-
-                        <div className="task-bottom-row">
-                          <div className="task-meta">
-                            {task.dueDate && <span>📅 {task.dueDate}</span>}
-                          </div>
-
-                          <div className="task-actions">
-                            <button className="icon-btn" onClick={() => openEditTaskModal(task)}>Edit</button>
-                            <button className="icon-btn" onClick={() => toggleArchive(task.id)}>
-                              {task.archived ? 'Restore' : 'Archive'}
-                            </button>
-
-                            {deleteConfirmId === task.id ? (
-                              <div className="confirm-box">
-                                <span>Delete?</span>
-                                <button className="btn-danger-sm" onClick={() => handleDelete(task.id)}>Yes</button>
-                                <button className="icon-btn" style={{ padding: '2px 4px' }} onClick={() => setDeleteConfirmId(null)}>No</button>
-                              </div>
-                            ) : (
-                              <button className="icon-btn" onClick={() => setDeleteConfirmId(task.id)}>Delete</button>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                    ))
-                  )}
+              <div className="toolbar">
+                <div className="search-bar">
+                  <span className="search-icon">🔍</span>
+                  <input
+                    type="text"
+                    className="search-input"
+                    placeholder="Search tasks..."
+                    value={searchQuery}
+                    onChange={e => setSearchQuery(e.target.value)}
+                  />
                 </div>
-              </main>
+                <select
+                  className="select-control"
+                  value={sortBy}
+                  onChange={e => setSortBy(e.target.value)}
+                >
+                  <option value="dueDate">Sort by Due Date</option>
+                  <option value="priority">Sort by Priority</option>
+                  <option value="title">Sort by Title</option>
+                  <option value="created">Sort by Date Created</option>
+                </select>
+              </div>
 
-              <aside className="calendar-card">
-                <div className="calendar-header">
-                  <h3>{monthLabel}</h3>
-                  <div className="calendar-nav">
-                    <button onClick={() => changeMonth(-1)}>‹</button>
-                    <button onClick={() => { setCalendarDate(new Date()); setSelectedDate(todayStr); }}>Today</button>
-                    <button onClick={() => changeMonth(1)}>›</button>
+              {selectedDate && (
+                <div className="filter-indicator">
+                  <span>Filtered by date: <strong>{selectedDate}</strong></span>
+                  <button onClick={() => setSelectedDate(null)}>Clear Date Filter ✕</button>
+                </div>
+              )}
+
+              <div className="task-list">
+                {filteredTasks.length === 0 ? (
+                  <div className="empty-state">
+                    <h3>No tasks found</h3>
+                    <p>Try adjusting filters or create a new task to get started.</p>
                   </div>
-                </div>
-
-                <div className="calendar-grid">
-                  {['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'].map(day => (
-                    <div key={day} className="calendar-day-head">{day}</div>
-                  ))}
-                  {calendarGrid.map((item, index) => {
-                    if (!item) return <div key={`empty-${index}`} className="calendar-cell empty" />;
-                    const isToday = item.dateStr === todayStr;
-                    const isSelected = item.dateStr === selectedDate;
-
-                    return (
-                      <div
-                        key={item.dateStr}
-                        className={`calendar-cell ${isToday ? 'today' : ''} ${isSelected ? 'selected' : ''}`}
-                        onClick={() => setSelectedDate(isSelected ? null : item.dateStr)}
-                      >
-                        {item.day}
-                        {item.hasTasks && <div className="task-dot" />}
+                ) : (
+                  filteredTasks.map(task => (
+                    <div key={task.id} className={`task-card ${task.completed ? 'completed' : ''}`}>
+                      <div className="task-top-row">
+                        <input
+                          type="checkbox"
+                          className="task-checkbox"
+                          checked={task.completed}
+                          onChange={() => toggleComplete(task.id)}
+                        />
+                        <button
+                          className={`star-btn ${task.starred ? 'starred' : ''}`}
+                          onClick={() => toggleStar(task.id)}
+                        >
+                          ★
+                        </button>
+                        <div className="task-content">
+                          <div className="task-header-row">
+                            <span className="task-title">{task.title}</span>
+                            <div className="task-badges">
+                              <span className={`priority-tag priority-${task.priority}`}>{task.priority}</span>
+                              {task.tag && <span className={`tag-badge tag-${task.tag}`}>{task.tag}</span>}
+                            </div>
+                          </div>
+                          {task.description && <p className="task-desc">{task.description}</p>}
+                          
+                          {task.subtasks && task.subtasks.length > 0 && (
+                            <div className="subtasks-section">
+                              {task.subtasks.map(sub => (
+                                <div key={sub.id} className={`subtask-item ${sub.completed ? 'completed' : ''}`}>
+                                  <input
+                                    type="checkbox"
+                                    checked={sub.completed}
+                                    onChange={() => toggleSubtask(task.id, sub.id)}
+                                  />
+                                  <span>{sub.text}</span>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                        </div>
                       </div>
-                    );
-                  })}
+
+                      <div className="task-bottom-row">
+                        <div className="task-meta">
+                          {task.dueDate && <span>📅 {task.dueDate}</span>}
+                        </div>
+
+                        <div className="task-actions">
+                          <button className="icon-btn" onClick={() => openEditTaskModal(task)}>
+                            Edit
+                          </button>
+                          <button className="icon-btn" onClick={() => toggleArchive(task.id)}>
+                            {task.archived ? 'Unarchive' : 'Archive'}
+                          </button>
+
+                          {deleteConfirmId === task.id ? (
+                            <div className="confirm-box">
+                              <span>Delete?</span>
+                              <button className="btn-danger-sm" onClick={() => handleDelete(task.id)}>Yes</button>
+                              <button className="icon-btn" onClick={() => setDeleteConfirmId(null)}>No</button>
+                            </div>
+                          ) : (
+                            <button className="icon-btn" onClick={() => setDeleteConfirmId(task.id)}>
+                              Delete
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
+            </section>
+
+            <aside className="calendar-card">
+              <div className="calendar-header">
+                <h3>{calendarDate.toLocaleString('default', { month: 'long', year: 'numeric' })}</h3>
+                <div className="calendar-nav">
+                  <button onClick={prevMonth}>‹</button>
+                  <button onClick={nextMonth}>›</button>
                 </div>
-              </aside>
-            </div>
-          </div>
+              </div>
+
+              <div className="calendar-grid">
+                <div className="calendar-day-head">Su</div>
+                <div className="calendar-day-head">Mo</div>
+                <div className="calendar-day-head">Tu</div>
+                <div className="calendar-day-head">We</div>
+                <div className="calendar-day-head">Th</div>
+                <div className="calendar-day-head">Fr</div>
+                <div className="calendar-day-head">Sa</div>
+
+                {calendarGrid.map((item, idx) => {
+                  if (!item) return <div key={`empty-${idx}`} />;
+                  const isToday = item.dateStr === todayStr;
+                  const isSelected = item.dateStr === selectedDate;
+                  const hasTasks = datesWithTasks.has(item.dateStr);
+
+                  return (
+                    <div
+                      key={item.dateStr}
+                      className={`calendar-cell ${isToday ? 'today' : ''} ${isSelected ? 'selected' : ''}`}
+                      onClick={() => setSelectedDate(isSelected ? null : item.dateStr)}
+                    >
+                      {item.day}
+                      {hasTasks && <div className="task-dot" />}
+                    </div>
+                  );
+                })}
+              </div>
+            </aside>
+          </main>
 
           {isModalOpen && (
             <div className="modal-backdrop" onClick={() => setIsModalOpen(false)}>
-              <div className="modal-card" onClick={(e) => e.stopPropagation()}>
+              <div className="modal-card" onClick={e => e.stopPropagation()}>
                 <div className="modal-header">
-                  <h2>{editingTask ? 'Edit Task' : 'Create Task'}</h2>
-                  <button onClick={() => setIsModalOpen(false)} style={{ fontSize: '18px', border: 'none', background: 'none', color: '#0f2744' }}>✕</button>
+                  <h2>{editingTask ? 'Edit Task' : 'Create New Task'}</h2>
+                  <button onClick={() => setIsModalOpen(false)} style={{ fontSize: '18px', color: 'var(--text-main)' }}>✕</button>
                 </div>
 
                 <form onSubmit={handleSaveTask} style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                   <div className="form-group">
-                    <label>Title *</label>
+                    <label>Task Title *</label>
                     <input
                       type="text"
                       required
-                      placeholder="e.g. Prepare client presentation deck"
+                      placeholder="Enter task name..."
                       value={formTitle}
-                      onChange={(e) => setFormTitle(e.target.value)}
-                      autoFocus
+                      onChange={e => setFormTitle(e.target.value)}
                     />
                   </div>
 
                   <div className="form-group">
                     <label>Description</label>
                     <textarea
-                      rows="2"
-                      placeholder="Add optional notes or context..."
+                      rows="3"
+                      placeholder="Add descriptions or notes..."
                       value={formDesc}
-                      onChange={(e) => setFormDesc(e.target.value)}
+                      onChange={e => setFormDesc(e.target.value)}
                     />
                   </div>
 
                   <div className="form-row">
                     <div className="form-group">
                       <label>Priority</label>
-                      <select
-                        value={formPriority}
-                        onChange={(e) => setFormPriority(e.target.value)}
-                      >
+                      <select value={formPriority} onChange={e => setFormPriority(e.target.value)}>
                         <option value="High">High</option>
                         <option value="Medium">Medium</option>
                         <option value="Low">Low</option>
@@ -1667,10 +1744,7 @@
 
                     <div className="form-group">
                       <label>Tag</label>
-                      <select
-                        value={formTag}
-                        onChange={(e) => setFormTag(e.target.value)}
-                      >
+                      <select value={formTag} onChange={e => setFormTag(e.target.value)}>
                         <option value="Work">Work</option>
                         <option value="Personal">Personal</option>
                         <option value="Urgent">Urgent</option>
@@ -1683,26 +1757,33 @@
                     <input
                       type="date"
                       value={formDueDate}
-                      onChange={(e) => setFormDueDate(e.target.value)}
+                      onChange={e => setFormDueDate(e.target.value)}
                     />
                   </div>
 
                   <div className="form-group">
-                    <label>Checklist / Subtasks</label>
+                    <label>Subtasks</label>
                     <div className="subtask-input-row">
                       <input
                         type="text"
-                        placeholder="Add subtask step..."
+                        placeholder="Add a subtask..."
                         value={newSubtaskText}
-                        onChange={(e) => setNewSubtaskText(e.target.value)}
+                        onChange={e => setNewSubtaskText(e.target.value)}
+                        onKeyDown={e => {
+                          if (e.key === 'Enter') {
+                            e.preventDefault();
+                            handleAddSubtaskToForm();
+                          }
+                        }}
                       />
                       <button type="button" className="btn-secondary" onClick={handleAddSubtaskToForm}>Add</button>
                     </div>
+
                     <div className="subtask-list-edit">
                       {formSubtasks.map(sub => (
                         <div key={sub.id} className="subtask-item-edit">
                           <span>{sub.text}</span>
-                          <button type="button" onClick={() => handleRemoveSubtaskFromForm(sub.id)} style={{ color: 'var(--danger-color)' }}>✕</button>
+                          <button type="button" onClick={() => handleRemoveSubtaskFromForm(sub.id)}>✕</button>
                         </div>
                       ))}
                     </div>
@@ -1719,45 +1800,6 @@
         </div>
       );
     }
-
-
-    // PWA install support (Chromium/Android/desktop).
-    let deferredInstallPrompt = null;
-
-    window.addEventListener('beforeinstallprompt', (event) => {
-      event.preventDefault();
-      deferredInstallPrompt = event;
-
-      const installButton = document.getElementById('install-app-btn');
-      if (installButton) {
-        installButton.style.display = 'block';
-      }
-    });
-
-    window.addEventListener('appinstalled', () => {
-      deferredInstallPrompt = null;
-
-      const installButton = document.getElementById('install-app-btn');
-      if (installButton) {
-        installButton.style.display = 'none';
-      }
-    });
-
-    document.addEventListener('click', async (event) => {
-      const installButton = event.target.closest('#install-app-btn');
-      if (!installButton || !deferredInstallPrompt) return;
-
-      deferredInstallPrompt.prompt();
-
-      try {
-        await deferredInstallPrompt.userChoice;
-      } catch (error) {
-        console.warn('Install prompt was dismissed or unavailable:', error);
-      }
-
-      deferredInstallPrompt = null;
-      installButton.style.display = 'none';
-    });
 
     const root = ReactDOM.createRoot(document.getElementById('root'));
     root.render(<App />);
