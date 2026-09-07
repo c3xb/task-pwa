@@ -1,0 +1,1767 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Task Flow Pro</title>
+  <meta name="theme-color" content="#2563eb">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Task Flow">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="apple-touch-icon" href="/icons/icon-192.png">
+  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --font-stack: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+
+      --sidebar-bg: #ffffff;
+      --sidebar-hover: #f1f5f9;
+      --sidebar-active: #e0e7ff;
+      --sidebar-text: #1e3a8a;
+      --sidebar-border: #e2e8f0;
+
+      --bg-main: #f8fafc;
+      --bg-card: #ffffff;
+      --border-color: #e2e8f0;
+      --border-dark: #cbd5e1;
+
+      --text-main: #0f2744;
+      --text-muted: #2563eb;
+
+      --accent-indigo: #2563eb;
+      --accent-indigo-hover: #1d4ed8;
+      --accent-indigo-light: #eff6ff;
+      --accent-blue: #3b82f6;
+
+      --priority-high-bg: #fef2f2;
+      --priority-high-text: #dc2626;
+      --priority-high-border: #fca5a5;
+
+      --priority-med-bg: #fffbeb;
+      --priority-med-text: #d97706;
+      --priority-med-border: #fcd34d;
+
+      --priority-low-bg: #ecfdf5;
+      --priority-low-text: #059669;
+      --priority-low-border: #6ee7b7;
+
+      --tag-work-bg: #e0f2fe;
+      --tag-work-text: #0369a1;
+      --tag-personal-bg: #fce7f3;
+      --tag-personal-text: #be185d;
+      --tag-urgent-bg: #ffe4e6;
+      --tag-urgent-text: #e11d48;
+
+      --star-color: #eab308;
+      --danger-color: #ef4444;
+      --danger-hover: #dc2626;
+
+      --radius-sm: 6px;
+      --radius-md: 8px;
+      --radius-lg: 12px;
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+
+    body {
+      font-family: var(--font-stack);
+      background-color: var(--bg-main);
+      color: var(--text-main);
+      line-height: 1.4;
+      font-size: 14px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    button,
+    input,
+    textarea,
+    select {
+      font-family: inherit;
+      font-size: 14px;
+      color: var(--text-main);
+    }
+
+    button {
+      cursor: pointer;
+      border: none;
+      background: none;
+    }
+
+    .app-layout {
+      display: flex;
+      min-height: 100vh;
+      position: relative;
+    }
+
+    .sidebar-overlay {
+      display: none;
+    }
+
+    .left-menu {
+      width: 280px;
+      background-color: var(--sidebar-bg);
+      color: var(--sidebar-text);
+      display: flex;
+      flex-direction: column;
+      padding: 16px;
+      border-right: 1px solid var(--sidebar-border);
+      flex-shrink: 0;
+      gap: 14px;
+      height: 100vh;
+      position: sticky;
+      top: 0;
+      overflow-y: auto;
+      z-index: 100;
+    }
+
+    .brand-section {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--sidebar-border);
+    }
+
+    .brand-content {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-icon {
+      width: 30px;
+      height: 30px;
+      background: linear-gradient(135deg, var(--accent-indigo), var(--accent-blue));
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #ffffff;
+      font-weight: bold;
+    }
+
+    .brand-title {
+      font-size: 17px;
+      font-weight: 700;
+      color: #0f2744;
+      letter-spacing: -0.02em;
+    }
+
+    .close-sidebar-btn {
+      display: none;
+      font-size: 18px;
+      color: #0f2744;
+      padding: 4px;
+    }
+
+    .btn-create-task {
+      background: linear-gradient(135deg, var(--accent-indigo), var(--accent-indigo-hover));
+      color: #ffffff;
+      padding: 9px 14px;
+      border-radius: var(--radius-md);
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+      transition: transform 0.2s ease;
+    }
+
+    .btn-create-task:active {
+      transform: scale(0.98);
+    }
+
+    .progress-widget {
+      background: var(--accent-indigo-light);
+      border: 1px solid #bfdbfe;
+      border-radius: var(--radius-md);
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .progress-header {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      font-weight: 700;
+      color: #0f2744;
+    }
+
+    .progress-bar-bg {
+      height: 6px;
+      background: #cbd5e1;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      background: var(--accent-indigo);
+      transition: width 0.3s ease;
+    }
+
+    .menu-group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .menu-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #1e3a8a;
+      margin-bottom: 6px;
+      padding-left: 8px;
+    }
+
+    .menu-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .menu-item button {
+      width: 100%;
+      text-align: left;
+      padding: 8px 10px;
+      border-radius: var(--radius-md);
+      color: #1e3a8a;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: background-color 0.15s ease;
+    }
+
+    .menu-item button:hover {
+      background-color: var(--sidebar-hover);
+      color: #0f2744;
+    }
+
+    .menu-item.active button {
+      background-color: var(--sidebar-active);
+      color: #0f172a;
+      font-weight: 700;
+    }
+
+    .menu-item-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .badge-count {
+      font-size: 11px;
+      background: #eff6ff;
+      color: #1e3a8a;
+      padding: 2px 7px;
+      border-radius: 12px;
+      font-weight: 600;
+    }
+
+    .menu-item.active .badge-count {
+      background: var(--accent-indigo);
+      color: #ffffff;
+    }
+
+    .badge-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+
+    .badge-dot.high {
+      background-color: var(--priority-high-text);
+    }
+
+    .badge-dot.medium {
+      background-color: var(--priority-med-text);
+    }
+
+    .badge-dot.low {
+      background-color: var(--priority-low-text);
+    }
+
+    .main-wrapper {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1fr 300px;
+      gap: 20px;
+      padding: 24px;
+      max-width: 1350px;
+      width: 100%;
+    }
+
+    .top-bar-mobile {
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 14px;
+      background: var(--bg-card);
+      border-bottom: 1px solid var(--border-color);
+      position: sticky;
+      top: 0;
+      z-index: 90;
+    }
+
+    .menu-toggle-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      background: var(--sidebar-hover);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      color: #0f2744;
+      font-weight: 600;
+      font-size: 13px;
+    }
+
+    @media (max-width: 1024px) {
+      .main-wrapper {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .top-bar-mobile {
+        display: flex;
+      }
+
+      .left-menu {
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        height: 100vh;
+        z-index: 1000;
+        transform: translateX(-100%);
+        transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+        box-shadow: 6px 0 20px rgba(15, 23, 42, 0.15);
+        will-change: transform;
+      }
+
+      .left-menu.mobile-open {
+        transform: translateX(0);
+      }
+
+      .close-sidebar-btn {
+        display: block;
+      }
+
+      .sidebar-overlay {
+        display: block;
+        position: fixed;
+        inset: 0;
+        background: rgba(15, 23, 42, 0.45);
+        backdrop-filter: blur(3px);
+        z-index: 999;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.25s ease;
+      }
+
+      .sidebar-overlay.active {
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      .main-wrapper {
+        padding: 12px;
+        gap: 14px;
+      }
+    }
+
+    .content-area {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .top-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .page-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: #0f2744;
+      letter-spacing: -0.01em;
+    }
+
+    .toolbar {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      width: 100%;
+      flex-wrap: wrap;
+    }
+
+    .search-bar {
+      flex: 1;
+      min-width: 180px;
+      position: relative;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 8px 12px 8px 34px;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      background: var(--bg-card);
+      box-shadow: var(--shadow-sm);
+      color: #0f2744;
+      font-size: 13px;
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #1e3a8a;
+      pointer-events: none;
+      font-size: 13px;
+    }
+
+    .select-control {
+      padding: 8px 10px;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      background: var(--bg-card);
+      box-shadow: var(--shadow-sm);
+      color: #0f2744;
+      font-weight: 600;
+      font-size: 13px;
+    }
+
+    .btn-secondary-action {
+      padding: 6px 10px;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      background: var(--bg-card);
+      color: #1e3a8a;
+      font-weight: 600;
+      font-size: 12px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .task-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .task-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 10px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      box-shadow: var(--shadow-sm);
+      transition: border-color 0.15s ease;
+    }
+
+    .task-card.completed {
+      background-color: #f8fafc;
+      opacity: 0.75;
+    }
+
+    .task-card.completed .task-title {
+      text-decoration: line-through;
+      color: #64748b;
+    }
+
+    .task-top-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      width: 100%;
+    }
+
+    .task-checkbox {
+      margin-top: 2px;
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+      accent-color: var(--accent-indigo);
+      flex-shrink: 0;
+    }
+
+    .star-btn {
+      color: #cbd5e1;
+      font-size: 18px;
+      line-height: 1;
+      padding-top: 1px;
+      flex-shrink: 0;
+    }
+
+    .star-btn.starred {
+      color: var(--star-color);
+    }
+
+    .task-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      min-width: 0;
+    }
+
+    .task-header-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .task-title {
+      font-weight: 600;
+      font-size: 14px;
+      color: #0f2744;
+      line-height: 1.3;
+      word-break: break-word;
+    }
+
+    .task-badges {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      flex-shrink: 0;
+    }
+
+    .task-desc {
+      color: #2563eb;
+      font-size: 12px;
+      line-height: 1.35;
+      word-break: break-word;
+    }
+
+    .tag-badge {
+      padding: 2px 6px;
+      border-radius: 10px;
+      font-size: 10px;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .tag-Work {
+      background: var(--tag-work-bg);
+      color: var(--tag-work-text);
+    }
+
+    .tag-Personal {
+      background: var(--tag-personal-bg);
+      color: var(--tag-personal-text);
+    }
+
+    .tag-Urgent {
+      background: var(--tag-urgent-bg);
+      color: var(--tag-urgent-text);
+    }
+
+    .priority-tag {
+      padding: 1px 6px;
+      border-radius: var(--radius-sm);
+      font-weight: 600;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+    }
+
+    .priority-High {
+      background: var(--priority-high-bg);
+      color: var(--priority-high-text);
+      border: 1px solid var(--priority-high-border);
+    }
+
+    .priority-Medium {
+      background: var(--priority-med-bg);
+      color: var(--priority-med-text);
+      border: 1px solid var(--priority-med-border);
+    }
+
+    .priority-Low {
+      background: var(--priority-low-bg);
+      color: var(--priority-low-text);
+      border: 1px solid var(--priority-low-border);
+    }
+
+    .subtasks-section {
+      margin-top: 4px;
+      padding-top: 4px;
+      border-top: 1px dashed var(--border-color);
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .subtask-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      font-size: 12px;
+      color: #0f2744;
+    }
+
+    .subtask-item input[type="checkbox"] {
+      margin-top: 2px;
+      flex-shrink: 0;
+      width: 14px;
+      height: 14px;
+    }
+
+    .subtask-item span {
+      flex: 1;
+      line-height: 1.3;
+      word-break: break-word;
+    }
+
+    .subtask-item.completed span {
+      text-decoration: line-through;
+      color: #64748b;
+    }
+
+    .task-bottom-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 6px;
+      border-top: 1px solid #f1f5f9;
+      gap: 8px;
+    }
+
+    .task-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      color: #1e3a8a;
+    }
+
+    .task-actions {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      margin-left: auto;
+    }
+
+    .icon-btn {
+      padding: 3px 8px;
+      color: #1e3a8a;
+      border-radius: var(--radius-sm);
+      font-size: 11px;
+      font-weight: 600;
+      background: var(--bg-main);
+    }
+
+    .confirm-box {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 11px;
+      background: #fef2f2;
+      padding: 2px 6px;
+      border-radius: var(--radius-sm);
+      border: 1px solid #fecaca;
+    }
+
+    .confirm-box span {
+      color: var(--danger-color);
+      font-weight: 600;
+    }
+
+    .btn-danger-sm {
+      background-color: var(--danger-color);
+      color: #ffffff;
+      padding: 2px 6px;
+      border-radius: var(--radius-sm);
+      font-weight: 500;
+      font-size: 10px;
+    }
+
+    .calendar-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 14px;
+      box-shadow: var(--shadow-sm);
+      height: fit-content;
+      color: #0f2744;
+    }
+
+    .calendar-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .calendar-header h3 {
+      font-size: 14px;
+      font-weight: 700;
+      color: #0f2744;
+    }
+
+    .calendar-nav {
+      display: flex;
+      gap: 4px;
+    }
+
+    .calendar-nav button {
+      padding: 2px 8px;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      font-size: 11px;
+      font-weight: 600;
+      color: #1e3a8a;
+    }
+
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 2px;
+      text-align: center;
+    }
+
+    .calendar-day-head {
+      font-size: 10px;
+      font-weight: 700;
+      color: #1e3a8a;
+      padding: 4px 0;
+    }
+
+    .calendar-cell {
+      aspect-ratio: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      position: relative;
+      font-weight: 600;
+      color: #0f2744;
+    }
+
+    .calendar-cell.today {
+      font-weight: 700;
+      color: var(--accent-indigo);
+      background-color: #f1f5f9;
+    }
+
+    .calendar-cell.selected {
+      background: var(--accent-indigo) !important;
+      color: #ffffff !important;
+    }
+
+    .task-dot {
+      width: 4px;
+      height: 4px;
+      background-color: var(--accent-blue);
+      border-radius: 50%;
+      position: absolute;
+      bottom: 2px;
+    }
+
+    .calendar-cell.selected .task-dot {
+      background-color: #ffffff;
+    }
+
+    .modal-backdrop {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(15, 23, 42, 0.5);
+      backdrop-filter: blur(2px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+      padding: 12px;
+    }
+
+    .modal-card {
+      background: var(--bg-card);
+      border-radius: var(--radius-lg);
+      width: 100%;
+      max-width: 480px;
+      padding: 18px;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      color: #0f2744;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-header h2 {
+      font-size: 16px;
+      font-weight: 700;
+      color: #0f2744;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .form-group label {
+      font-size: 11px;
+      font-weight: 700;
+      color: #1e3a8a;
+      text-transform: uppercase;
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      padding: 8px 10px;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      background: var(--bg-card);
+      color: #0f2744;
+      font-size: 13px;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .subtask-input-row {
+      display: flex;
+      gap: 6px;
+    }
+
+    .subtask-list-edit {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      margin-top: 4px;
+    }
+
+    .subtask-item-edit {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--bg-main);
+      padding: 4px 8px;
+      border-radius: var(--radius-sm);
+      font-size: 12px;
+    }
+
+    .form-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    .btn-secondary {
+      background: var(--bg-main);
+      border: 1px solid var(--border-color);
+      padding: 7px 14px;
+      border-radius: var(--radius-md);
+      font-weight: 600;
+      color: #0f2744;
+      font-size: 13px;
+    }
+
+    .btn-primary {
+      background: var(--accent-indigo);
+      color: #ffffff;
+      padding: 7px 14px;
+      border-radius: var(--radius-md);
+      font-weight: 600;
+      font-size: 13px;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 32px 12px;
+      color: #1e3a8a;
+      background: var(--bg-card);
+      border: 2px dashed var(--border-color);
+      border-radius: var(--radius-lg);
+    }
+
+    .filter-indicator {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--accent-indigo-light);
+      border: 1px solid #bfdbfe;
+      color: #0f2744;
+      padding: 6px 12px;
+      border-radius: var(--radius-md);
+      font-size: 12px;
+    }
+
+    .install-app-btn {
+      padding: 7px 10px;
+      background: var(--accent-indigo);
+      color: #ffffff;
+      border-radius: var(--radius-md);
+      font-size: 12px;
+      font-weight: 700;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .install-app-btn:active {
+      transform: scale(0.98);
+    }
+
+    @media (min-width: 769px) {
+      #install-app-btn {
+        position: fixed;
+        top: 12px;
+        right: 14px;
+        z-index: 1100;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useMemo, useEffect } = React;
+
+    const INITIAL_TASKS = [
+      {
+        id: '1',
+        title: 'Finalize Q3 product architecture roadmap',
+        description: 'Detail system component dependencies and present proposed microservice split.',
+        priority: 'High',
+        tag: 'Work',
+        dueDate: new Date().toISOString().split('T')[0],
+        completed: false,
+        archived: false,
+        starred: true,
+        createdAt: Date.now() - 86400000 * 2,
+        subtasks: [
+          { id: 's1', text: 'Draft microservice breakdown diagram', completed: true },
+          { id: 's2', text: 'Review database load estimates', completed: false }
+        ]
+      },
+      {
+        id: '2',
+        title: 'Review pull requests for auth service',
+        description: 'Verify OAuth2 token validation updates and security test coverage.',
+        priority: 'Medium',
+        tag: 'Urgent',
+        dueDate: new Date(Date.now() + 86400000).toISOString().split('T')[0],
+        completed: false,
+        archived: false,
+        starred: false,
+        createdAt: Date.now() - 86400000,
+        subtasks: []
+      },
+      {
+        id: '3',
+        title: 'Update API OpenAPI specification specs',
+        description: 'Ensure user profile endpoint updates reflect recent database schema migrations.',
+        priority: 'Low',
+        tag: 'Work',
+        dueDate: new Date(Date.now() + 86400000 * 3).toISOString().split('T')[0],
+        completed: true,
+        archived: false,
+        starred: false,
+        createdAt: Date.now() - 86400000 * 4,
+        subtasks: []
+      },
+      {
+        id: '4',
+        title: 'Book annual health checkup appointment',
+        description: 'Call family clinic for morning routine availability.',
+        priority: 'Medium',
+        tag: 'Personal',
+        dueDate: new Date(Date.now() + 86400000 * 5).toISOString().split('T')[0],
+        completed: false,
+        archived: false,
+        starred: true,
+        createdAt: Date.now() - 86400000 * 1,
+        subtasks: []
+      }
+    ];
+
+    function App() {
+      const [tasks, setTasks] = useState(() => {
+        const saved = localStorage.getItem('tf_tasks');
+        return saved ? JSON.parse(saved) : INITIAL_TASKS;
+      });
+
+      const [currentView, setCurrentView] = useState(() => localStorage.getItem('tf_view') || 'all');
+      const [priorityFilter, setPriorityFilter] = useState(() => localStorage.getItem('tf_priority') || 'all');
+      const [tagFilter, setTagFilter] = useState(() => localStorage.getItem('tf_tag') || 'all');
+      const [sortBy, setSortBy] = useState(() => localStorage.getItem('tf_sort') || 'dueDate');
+      const [selectedDate, setSelectedDate] = useState(() => localStorage.getItem('tf_selected_date') || null);
+
+      const [searchQuery, setSearchQuery] = useState('');
+      const [calendarDate, setCalendarDate] = useState(new Date());
+
+      const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
+
+      const [isModalOpen, setIsModalOpen] = useState(false);
+      const [editingTask, setEditingTask] = useState(null);
+
+      const [formTitle, setFormTitle] = useState('');
+      const [formDesc, setFormDesc] = useState('');
+      const [formPriority, setFormPriority] = useState('Medium');
+      const [formTag, setFormTag] = useState('Work');
+      const [formDueDate, setFormDueDate] = useState('');
+      const [formSubtasks, setFormSubtasks] = useState([]);
+      const [newSubtaskText, setNewSubtaskText] = useState('');
+
+      const [deleteConfirmId, setDeleteConfirmId] = useState(null);
+
+      const todayStr = useMemo(() => new Date().toISOString().split('T')[0], []);
+
+      useEffect(() => {
+        localStorage.setItem('tf_tasks', JSON.stringify(tasks));
+      }, [tasks]);
+
+      useEffect(() => {
+        localStorage.setItem('tf_view', currentView);
+      }, [currentView]);
+
+      useEffect(() => {
+        localStorage.setItem('tf_priority', priorityFilter);
+      }, [priorityFilter]);
+
+      useEffect(() => {
+        localStorage.setItem('tf_tag', tagFilter);
+      }, [tagFilter]);
+
+      useEffect(() => {
+        localStorage.setItem('tf_sort', sortBy);
+      }, [sortBy]);
+
+      useEffect(() => {
+        if (selectedDate) {
+          localStorage.setItem('tf_selected_date', selectedDate);
+        } else {
+          localStorage.removeItem('tf_selected_date');
+        }
+      }, [selectedDate]);
+
+      useEffect(() => {
+        if (isMobileSidebarOpen) {
+          document.body.style.overflow = 'hidden';
+          document.body.style.touchAction = 'none';
+        } else {
+          document.body.style.overflow = '';
+          document.body.style.touchAction = '';
+        }
+        return () => {
+          document.body.style.overflow = '';
+          document.body.style.touchAction = '';
+        };
+      }, [isMobileSidebarOpen]);
+
+      const resetForm = () => {
+        setFormTitle('');
+        setFormDesc('');
+        setFormPriority('Medium');
+        setFormTag('Work');
+        setFormDueDate('');
+        setFormSubtasks([]);
+        setNewSubtaskText('');
+        setEditingTask(null);
+      };
+
+      const openNewTaskModal = () => {
+        resetForm();
+        if (selectedDate) setFormDueDate(selectedDate);
+        setIsModalOpen(true);
+      };
+
+      const openEditTaskModal = (task) => {
+        setEditingTask(task);
+        setFormTitle(task.title);
+        setFormDesc(task.description || '');
+        setFormPriority(task.priority);
+        setFormTag(task.tag || 'Work');
+        setFormDueDate(task.dueDate || '');
+        setFormSubtasks(task.subtasks ? [...task.subtasks] : []);
+        setIsModalOpen(true);
+      };
+
+      const handleAddSubtaskToForm = () => {
+        if (!newSubtaskText.trim()) return;
+        setFormSubtasks([...formSubtasks, { id: Date.now().toString(), text: newSubtaskText.trim(), completed: false }]);
+        setNewSubtaskText('');
+      };
+
+      const handleRemoveSubtaskFromForm = (id) => {
+        setFormSubtasks(formSubtasks.filter(s => s.id !== id));
+      };
+
+      const handleSaveTask = (e) => {
+        e.preventDefault();
+        if (!formTitle.trim()) return;
+
+        if (editingTask) {
+          setTasks(tasks.map(t => t.id === editingTask.id ? {
+            ...t,
+            title: formTitle.trim(),
+            description: formDesc.trim(),
+            priority: formPriority,
+            tag: formTag,
+            dueDate: formDueDate,
+            subtasks: formSubtasks
+          } : t));
+        } else {
+          const newTask = {
+            id: Date.now().toString(),
+            title: formTitle.trim(),
+            description: formDesc.trim(),
+            priority: formPriority,
+            tag: formTag,
+            dueDate: formDueDate,
+            completed: false,
+            archived: false,
+            starred: false,
+            createdAt: Date.now(),
+            subtasks: formSubtasks
+          };
+          setTasks([newTask, ...tasks]);
+        }
+
+        setIsModalOpen(false);
+        resetForm();
+      };
+
+      const toggleComplete = (id) => {
+        setTasks(tasks.map(t => t.id === id ? { ...t, completed: !t.completed } : t));
+      };
+
+      const toggleStar = (id) => {
+        setTasks(tasks.map(t => t.id === id ? { ...t, starred: !t.starred } : t));
+      };
+
+      const toggleArchive = (id) => {
+        setTasks(tasks.map(t => t.id === id ? { ...t, archived: !t.archived } : t));
+      };
+
+      const toggleSubtask = (taskId, subtaskId) => {
+        setTasks(tasks.map(t => {
+          if (t.id === taskId) {
+            const updated = t.subtasks.map(s => s.id === subtaskId ? { ...s, completed: !s.completed } : s);
+            return { ...t, subtasks: updated };
+          }
+          return t;
+        }));
+      };
+
+      const handleDelete = (id) => {
+        setTasks(tasks.filter(t => t.id !== id));
+        setDeleteConfirmId(null);
+      };
+
+      const handleClearCompleted = () => {
+        setTasks(tasks.filter(t => !(t.completed && !t.archived)));
+      };
+
+      const selectFilterView = (view, priority = 'all', tag = 'all') => {
+        setCurrentView(view);
+        setPriorityFilter(priority);
+        setTagFilter(tag);
+        setSelectedDate(null);
+        setIsMobileSidebarOpen(false);
+      };
+
+      const filteredTasks = useMemo(() => {
+        let list = tasks.filter(task => {
+          if (currentView === 'archived') {
+            if (!task.archived) return false;
+          } else {
+            if (task.archived) return false;
+            if (currentView === 'today' && task.dueDate !== todayStr) return false;
+            if (currentView === 'starred' && !task.starred) return false;
+          }
+
+          if (selectedDate && task.dueDate !== selectedDate) return false;
+          if (priorityFilter !== 'all' && task.priority !== priorityFilter) return false;
+          if (tagFilter !== 'all' && task.tag !== tagFilter) return false;
+
+          if (searchQuery.trim()) {
+            const query = searchQuery.toLowerCase();
+            const matchesTitle = task.title.toLowerCase().includes(query);
+            const matchesDesc = task.description.toLowerCase().includes(query);
+            if (!matchesTitle && !matchesDesc) return false;
+          }
+
+          return true;
+        });
+
+        return list.sort((a, b) => {
+          if (sortBy === 'dueDate') {
+            if (!a.dueDate) return 1;
+            if (!b.dueDate) return -1;
+            return a.dueDate.localeCompare(b.dueDate);
+          }
+          if (sortBy === 'priority') {
+            const map = { High: 1, Medium: 2, Low: 3 };
+            return map[a.priority] - map[b.priority];
+          }
+          if (sortBy === 'title') {
+            return a.title.localeCompare(b.title);
+          }
+          return b.createdAt - a.createdAt;
+        });
+      }, [tasks, currentView, selectedDate, priorityFilter, tagFilter, sortBy, searchQuery, todayStr]);
+
+      const counts = useMemo(() => {
+        const active = tasks.filter(t => !t.archived);
+        return {
+          all: active.length,
+          today: active.filter(t => t.dueDate === todayStr).length,
+          starred: active.filter(t => t.starred).length,
+          archived: tasks.filter(t => t.archived).length,
+          high: active.filter(t => t.priority === 'High').length,
+          medium: active.filter(t => t.priority === 'Medium').length,
+          low: active.filter(t => t.priority === 'Low').length,
+          work: active.filter(t => t.tag === 'Work').length,
+          personal: active.filter(t => t.tag === 'Personal').length,
+          urgent: active.filter(t => t.tag === 'Urgent').length,
+          completedCount: active.filter(t => t.completed).length
+        };
+      }, [tasks, todayStr]);
+
+      const completionPercent = useMemo(() => {
+        if (counts.all === 0) return 0;
+        return Math.round((counts.completedCount / counts.all) * 100);
+      }, [counts]);
+
+      const calendarGrid = useMemo(() => {
+        const year = calendarDate.getFullYear();
+        const month = calendarDate.getMonth();
+
+        const firstDay = new Date(year, month, 1).getDay();
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+        const grid = [];
+        for (let i = 0; i < firstDay; i++) {
+          grid.push(null);
+        }
+        for (let d = 1; d <= daysInMonth; d++) {
+          const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+          const hasTasks = tasks.some(t => !t.archived && t.dueDate === dateStr);
+          grid.push({ day: d, dateStr, hasTasks });
+        }
+        return grid;
+      }, [calendarDate, tasks]);
+
+      const changeMonth = (delta) => {
+        setCalendarDate(new Date(calendarDate.getFullYear(), calendarDate.getMonth() + delta, 1));
+      };
+
+      const monthLabel = calendarDate.toLocaleString('default', { month: 'long', year: 'numeric' });
+
+      return (
+        <div className="app-layout">
+          <div
+            className={`sidebar-overlay ${isMobileSidebarOpen ? 'active' : ''}`}
+            onClick={() => setIsMobileSidebarOpen(false)}
+          />
+
+          <aside className={`left-menu ${isMobileSidebarOpen ? 'mobile-open' : ''}`}>
+            <div className="brand-section">
+              <div className="brand-content">
+                <div className="brand-icon">✓</div>
+                <span className="brand-title">Task Flow</span>
+              </div>
+              <button
+                className="close-sidebar-btn"
+                onClick={() => setIsMobileSidebarOpen(false)}
+              >
+                ✕
+              </button>
+            </div>
+
+            <button className="btn-create-task" onClick={() => { openNewTaskModal(); setIsMobileSidebarOpen(false); }}>
+              <span>+</span>
+              <span>New Task</span>
+            </button>
+
+            <div className="progress-widget">
+              <div className="progress-header">
+                <span>Total Progress</span>
+                <span>{completionPercent}%</span>
+              </div>
+              <div className="progress-bar-bg">
+                <div className="progress-bar-fill" style={{ width: `${completionPercent}%` }} />
+              </div>
+            </div>
+
+            <div className="menu-group">
+              <div className="menu-label">Views</div>
+              <ul className="menu-list">
+                <li className={`menu-item ${currentView === 'all' && priorityFilter === 'all' && tagFilter === 'all' ? 'active' : ''}`}>
+                  <button onClick={() => selectFilterView('all')}>
+                    <div className="menu-item-left">
+                      <span>📋</span>
+                      <span>All Tasks</span>
+                    </div>
+                    <span className="badge-count">{counts.all}</span>
+                  </button>
+                </li>
+                <li className={`menu-item ${currentView === 'today' ? 'active' : ''}`}>
+                  <button onClick={() => selectFilterView('today')}>
+                    <div className="menu-item-left">
+                      <span>☀️</span>
+                      <span>Due Today</span>
+                    </div>
+                    <span className="badge-count">{counts.today}</span>
+                  </button>
+                </li>
+                <li className={`menu-item ${currentView === 'starred' ? 'active' : ''}`}>
+                  <button onClick={() => selectFilterView('starred')}>
+                    <div className="menu-item-left">
+                      <span>⭐</span>
+                      <span>Starred</span>
+                    </div>
+                    <span className="badge-count">{counts.starred}</span>
+                  </button>
+                </li>
+                <li className={`menu-item ${currentView === 'archived' ? 'active' : ''}`}>
+                  <button onClick={() => selectFilterView('archived')}>
+                    <div className="menu-item-left">
+                      <span>📦</span>
+                      <span>Archived</span>
+                    </div>
+                    <span className="badge-count">{counts.archived}</span>
+                  </button>
+                </li>
+              </ul>
+            </div>
+
+            <div className="menu-group">
+              <div className="menu-label">Tags</div>
+              <ul className="menu-list">
+                <li className={`menu-item ${tagFilter === 'Work' ? 'active' : ''}`}>
+                  <button onClick={() => selectFilterView(currentView, priorityFilter, 'Work')}>
+                    <div className="menu-item-left">
+                      <span>🏷️</span>
+                      <span>Work</span>
+                    </div>
+                    <span className="badge-count">{counts.work}</span>
+                  </button>
+                </li>
+                <li className={`menu-item ${tagFilter === 'Personal' ? 'active' : ''}`}>
+                  <button onClick={() => selectFilterView(currentView, priorityFilter, 'Personal')}>
+                    <div className="menu-item-left">
+                      <span>🏠</span>
+                      <span>Personal</span>
+                    </div>
+                    <span className="badge-count">{counts.personal}</span>
+                  </button>
+                </li>
+                <li className={`menu-item ${tagFilter === 'Urgent' ? 'active' : ''}`}>
+                  <button onClick={() => selectFilterView(currentView, priorityFilter, 'Urgent')}>
+                    <div className="menu-item-left">
+                      <span>🔥</span>
+                      <span>Urgent</span>
+                    </div>
+                    <span className="badge-count">{counts.urgent}</span>
+                  </button>
+                </li>
+              </ul>
+            </div>
+
+            <div className="menu-group">
+              <div className="menu-label">Priority</div>
+              <ul className="menu-list">
+                <li className={`menu-item ${priorityFilter === 'High' ? 'active' : ''}`}>
+                  <button onClick={() => selectFilterView(currentView, 'High', tagFilter)}>
+                    <div className="menu-item-left">
+                      <span className="badge-dot high"></span>
+                      <span>High Priority</span>
+                    </div>
+                    <span className="badge-count">{counts.high}</span>
+                  </button>
+                </li>
+                <li className={`menu-item ${priorityFilter === 'Medium' ? 'active' : ''}`}>
+                  <button onClick={() => selectFilterView(currentView, 'Medium', tagFilter)}>
+                    <div className="menu-item-left">
+                      <span className="badge-dot medium"></span>
+                      <span>Medium Priority</span>
+                    </div>
+                    <span className="badge-count">{counts.medium}</span>
+                  </button>
+                </li>
+                <li className={`menu-item ${priorityFilter === 'Low' ? 'active' : ''}`}>
+                  <button onClick={() => selectFilterView(currentView, 'Low', tagFilter)}>
+                    <div className="menu-item-left">
+                      <span className="badge-dot low"></span>
+                      <span>Low Priority</span>
+                    </div>
+                    <span className="badge-count">{counts.low}</span>
+                  </button>
+                </li>
+              </ul>
+            </div>
+          </aside>
+
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', width: '100%' }}>
+            <div className="top-bar-mobile">
+              <button
+                className="menu-toggle-btn"
+                onClick={() => setIsMobileSidebarOpen(true)}
+              >
+                <span>☰</span>
+                <span>Menu</span>
+              </button>
+              <div className="brand-content">
+                <div className="brand-icon">✓</div>
+                <span className="brand-title">Task Flow</span>
+              </div>
+              <button id="install-app-btn" className="install-app-btn" style={{display: 'none'}}>
+                Install
+              </button>
+            </div>
+
+            <div className="main-wrapper">
+              <main className="content-area">
+                <div className="top-header">
+                  <h1 className="page-title">
+                    {currentView === 'all' && priorityFilter === 'all' && tagFilter === 'all' && 'All Tasks'}
+                    {currentView === 'today' && 'Due Today'}
+                    {currentView === 'starred' && 'Starred Tasks'}
+                    {currentView === 'archived' && 'Archived Tasks'}
+                    {tagFilter !== 'all' && `Tag: ${tagFilter}`}
+                    {priorityFilter !== 'all' && ` - ${priorityFilter} Priority`}
+                  </h1>
+                  {counts.completedCount > 0 && currentView !== 'archived' && (
+                    <button className="btn-secondary-action" onClick={handleClearCompleted}>
+                      Clear Completed
+                    </button>
+                  )}
+                </div>
+
+                <div className="toolbar">
+                  <div className="search-bar">
+                    <span className="search-icon">🔍</span>
+                    <input
+                      type="text"
+                      className="search-input"
+                      placeholder="Search tasks..."
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                    />
+                  </div>
+                  <select
+                    className="select-control"
+                    value={sortBy}
+                    onChange={(e) => setSortBy(e.target.value)}
+                  >
+                    <option value="dueDate">Sort by Due Date</option>
+                    <option value="priority">Sort by Priority</option>
+                    <option value="title">Sort by Title</option>
+                    <option value="createdAt">Sort by Date Added</option>
+                  </select>
+                </div>
+
+                {selectedDate && (
+                  <div className="filter-indicator">
+                    <span>Filtered by Date: <strong>{selectedDate}</strong></span>
+                    <button onClick={() => setSelectedDate(null)} style={{ border: 'none', background: 'none', cursor: 'pointer', color: 'inherit', fontWeight: 'bold' }}>✕ Clear</button>
+                  </div>
+                )}
+
+                <div className="task-list">
+                  {filteredTasks.length === 0 ? (
+                    <div className="empty-state">
+                      <p>No tasks match your selection.</p>
+                    </div>
+                  ) : (
+                    filteredTasks.map(task => (
+                      <div key={task.id} className={`task-card ${task.completed ? 'completed' : ''}`}>
+                        <div className="task-top-row">
+                          <input
+                            type="checkbox"
+                            className="task-checkbox"
+                            checked={task.completed}
+                            onChange={() => toggleComplete(task.id)}
+                          />
+                          <button
+                            className={`star-btn ${task.starred ? 'starred' : ''}`}
+                            onClick={() => toggleStar(task.id)}
+                          >
+                            ★
+                          </button>
+                          <div className="task-content">
+                            <div className="task-header-row">
+                              <span className="task-title">{task.title}</span>
+                              <div className="task-badges">
+                                <span className={`tag-badge tag-${task.tag}`}>{task.tag}</span>
+                                <span className={`priority-tag priority-${task.priority}`}>{task.priority}</span>
+                              </div>
+                            </div>
+
+                            {task.description && <p className="task-desc">{task.description}</p>}
+
+                            {task.subtasks && task.subtasks.length > 0 && (
+                              <div className="subtasks-section">
+                                {task.subtasks.map(sub => (
+                                  <div key={sub.id} className={`subtask-item ${sub.completed ? 'completed' : ''}`}>
+                                    <input
+                                      type="checkbox"
+                                      checked={sub.completed}
+                                      onChange={() => toggleSubtask(task.id, sub.id)}
+                                    />
+                                    <span>{sub.text}</span>
+                                  </div>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                        </div>
+
+                        <div className="task-bottom-row">
+                          <div className="task-meta">
+                            {task.dueDate && <span>📅 {task.dueDate}</span>}
+                          </div>
+
+                          <div className="task-actions">
+                            <button className="icon-btn" onClick={() => openEditTaskModal(task)}>Edit</button>
+                            <button className="icon-btn" onClick={() => toggleArchive(task.id)}>
+                              {task.archived ? 'Restore' : 'Archive'}
+                            </button>
+
+                            {deleteConfirmId === task.id ? (
+                              <div className="confirm-box">
+                                <span>Delete?</span>
+                                <button className="btn-danger-sm" onClick={() => handleDelete(task.id)}>Yes</button>
+                                <button className="icon-btn" style={{ padding: '2px 4px' }} onClick={() => setDeleteConfirmId(null)}>No</button>
+                              </div>
+                            ) : (
+                              <button className="icon-btn" onClick={() => setDeleteConfirmId(task.id)}>Delete</button>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </main>
+
+              <aside className="calendar-card">
+                <div className="calendar-header">
+                  <h3>{monthLabel}</h3>
+                  <div className="calendar-nav">
+                    <button onClick={() => changeMonth(-1)}>‹</button>
+                    <button onClick={() => { setCalendarDate(new Date()); setSelectedDate(todayStr); }}>Today</button>
+                    <button onClick={() => changeMonth(1)}>›</button>
+                  </div>
+                </div>
+
+                <div className="calendar-grid">
+                  {['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'].map(day => (
+                    <div key={day} className="calendar-day-head">{day}</div>
+                  ))}
+                  {calendarGrid.map((item, index) => {
+                    if (!item) return <div key={`empty-${index}`} className="calendar-cell empty" />;
+                    const isToday = item.dateStr === todayStr;
+                    const isSelected = item.dateStr === selectedDate;
+
+                    return (
+                      <div
+                        key={item.dateStr}
+                        className={`calendar-cell ${isToday ? 'today' : ''} ${isSelected ? 'selected' : ''}`}
+                        onClick={() => setSelectedDate(isSelected ? null : item.dateStr)}
+                      >
+                        {item.day}
+                        {item.hasTasks && <div className="task-dot" />}
+                      </div>
+                    );
+                  })}
+                </div>
+              </aside>
+            </div>
+          </div>
+
+          {isModalOpen && (
+            <div className="modal-backdrop" onClick={() => setIsModalOpen(false)}>
+              <div className="modal-card" onClick={(e) => e.stopPropagation()}>
+                <div className="modal-header">
+                  <h2>{editingTask ? 'Edit Task' : 'Create Task'}</h2>
+                  <button onClick={() => setIsModalOpen(false)} style={{ fontSize: '18px', border: 'none', background: 'none', color: '#0f2744' }}>✕</button>
+                </div>
+
+                <form onSubmit={handleSaveTask} style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                  <div className="form-group">
+                    <label>Title *</label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="e.g. Prepare client presentation deck"
+                      value={formTitle}
+                      onChange={(e) => setFormTitle(e.target.value)}
+                      autoFocus
+                    />
+                  </div>
+
+                  <div className="form-group">
+                    <label>Description</label>
+                    <textarea
+                      rows="2"
+                      placeholder="Add optional notes or context..."
+                      value={formDesc}
+                      onChange={(e) => setFormDesc(e.target.value)}
+                    />
+                  </div>
+
+                  <div className="form-row">
+                    <div className="form-group">
+                      <label>Priority</label>
+                      <select
+                        value={formPriority}
+                        onChange={(e) => setFormPriority(e.target.value)}
+                      >
+                        <option value="High">High</option>
+                        <option value="Medium">Medium</option>
+                        <option value="Low">Low</option>
+                      </select>
+                    </div>
+
+                    <div className="form-group">
+                      <label>Tag</label>
+                      <select
+                        value={formTag}
+                        onChange={(e) => setFormTag(e.target.value)}
+                      >
+                        <option value="Work">Work</option>
+                        <option value="Personal">Personal</option>
+                        <option value="Urgent">Urgent</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div className="form-group">
+                    <label>Due Date</label>
+                    <input
+                      type="date"
+                      value={formDueDate}
+                      onChange={(e) => setFormDueDate(e.target.value)}
+                    />
+                  </div>
+
+                  <div className="form-group">
+                    <label>Checklist / Subtasks</label>
+                    <div className="subtask-input-row">
+                      <input
+                        type="text"
+                        placeholder="Add subtask step..."
+                        value={newSubtaskText}
+                        onChange={(e) => setNewSubtaskText(e.target.value)}
+                      />
+                      <button type="button" className="btn-secondary" onClick={handleAddSubtaskToForm}>Add</button>
+                    </div>
+                    <div className="subtask-list-edit">
+                      {formSubtasks.map(sub => (
+                        <div key={sub.id} className="subtask-item-edit">
+                          <span>{sub.text}</span>
+                          <button type="button" onClick={() => handleRemoveSubtaskFromForm(sub.id)} style={{ color: 'var(--danger-color)' }}>✕</button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="form-actions">
+                    <button type="button" className="btn-secondary" onClick={() => setIsModalOpen(false)}>Cancel</button>
+                    <button type="submit" className="btn-primary">{editingTask ? 'Save Changes' : 'Create Task'}</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          )}
+        </div>
+      );
+    }
+
+
+    // PWA install support (Chromium/Android/desktop).
+    let deferredInstallPrompt = null;
+
+    window.addEventListener('beforeinstallprompt', (event) => {
+      event.preventDefault();
+      deferredInstallPrompt = event;
+
+      const installButton = document.getElementById('install-app-btn');
+      if (installButton) {
+        installButton.style.display = 'block';
+      }
+    });
+
+    window.addEventListener('appinstalled', () => {
+      deferredInstallPrompt = null;
+
+      const installButton = document.getElementById('install-app-btn');
+      if (installButton) {
+        installButton.style.display = 'none';
+      }
+    });
+
+    document.addEventListener('click', async (event) => {
+      const installButton = event.target.closest('#install-app-btn');
+      if (!installButton || !deferredInstallPrompt) return;
+
+      deferredInstallPrompt.prompt();
+
+      try {
+        await deferredInstallPrompt.userChoice;
+      } catch (error) {
+        console.warn('Install prompt was dismissed or unavailable:', error);
+      }
+
+      deferredInstallPrompt = null;
+      installButton.style.display = 'none';
+    });
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+  </script>
+</body>
+
+</html>
